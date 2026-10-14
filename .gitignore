@@ -1,0 +1,5 @@
+# Downloaded by fetch-bsp.sh / extracted by setup.sh — multi-GB, never commit
+software-design/
+scripts/Linux_for_Tegra/
+scripts/.extract_tmp/
+.DS_Store

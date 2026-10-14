@@ -1,0 +1,6 @@
+# The extracted BSP lives here but is bind-mounted at run time (-v .../Linux_for_Tegra:/work),
+# never copied into the image. Without this, `docker build` ships ~11GB of root-owned files to
+# the daemon as build context and fails outright for any non-root caller:
+#   checking context: no permission to read from '.../Linux_for_Tegra/rootfs/etc/.pwd.lock'
+Linux_for_Tegra/
+.extract_tmp/

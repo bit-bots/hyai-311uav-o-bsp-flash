@@ -1,0 +1,15 @@
+# sha256 of the HZHY vendor BSP archives.
+#
+# Taken 2026-09-24 from the local copies in software-design/. The JP6.2 archive listed here is the
+# exact file that produced a verified working JetPack 6.2 flash of the HYAI-311UAV-O (Orin NX 16GB),
+# so it is the reference for any future download. The JP5.1.4 archive has NOT been flash-tested.
+#
+# These are the working copy under ~/dev/bit-bots/hyai-311uav-o-jp6. The untouched original vendor
+# drop (Chinese filenames) is at ~/HYAI-311UAV_O_v12 — its archives have not been re-hashed here,
+# so if the two ever need reconciling, hash that copy separately rather than assuming a match.
+#
+# Verify:  sha256sum -c CHECKSUMS.txt      (run from software-design/)
+# scripts/fetch-bsp.sh checks downloads from the mirror against this file.
+
+c6a6fd4674965bae22dc04401cac0e27bdd7feaf30a4fbe4112a078ad88ec8c8  flash-311UAV-O-V2.0_ONX_Jp6.2_SC_v1.0.0_20251204.tar.gz
+474ba35b60ecc9ceecd1f3b08a946a737a3666e616bd704aadc22875ba459dad  flash-AI311UAV-O_V2.0_ONX_Jp5.1.4_SC_v1.0.0_20251205-uartok.tar.gz
