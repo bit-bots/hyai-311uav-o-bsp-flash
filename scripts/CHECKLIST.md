@@ -27,6 +27,8 @@
 - [ ] `cat /etc/nv_tegra_release` — confirm it reports R36 (L4T 36.4.3 / JetPack 6.2).
 
 ## 4. Post-flash smoke test
+`postflash.sh` (run on the Jetson) automates what it can here and reports the rest as `WARN`/`MANUAL`.
+
 Rules from HZHY docs: **never `apt upgrade`** the image (breaks their adaptation).
 `sudo apt update && sudo apt install nvidia-jetpack` is fine if components are missing.
 

@@ -27,6 +27,8 @@ sudo ./setup.sh    # one-time: extracts software-design/flash-*Jp6.2*.tar.gz to
 sudo ./flash.sh    # interactive flash: prompts for recovery-mode entry (software
                    # `reboot --force forced-recovery` on the target first, SW1 button
                    # fallback), polls `lsusb` for the device, then runs the flash
+# on the Jetson, after first boot (copy it over, e.g. via the USB link 192.168.55.1):
+sudo ./postflash.sh [--ip ADDR[/22]] [--gw 172.20.0.1] [--dns 172.20.0.1] [--iface DEV]
 ```
 
 `setup.sh` and `flash.sh` must run as root (rootfs extraction needs to preserve device-node
@@ -62,6 +64,10 @@ repointing — they're hardcoded to the JP6.2 archive only.
   - REC button on this specific carrier board is **SW1** (varies by HZHY board model — see
     `user-manuals/HZHY-NVIDIA-Series-Quick-Flash-Tutorial-20250711.pdf` on the mirror for the per-board table);
     flash port is the Type-C connector at **J7**.
+- `scripts/postflash.sh` — runs on the Jetson, idempotent: disables unattended-upgrades/apt timers,
+  motd warning, mutes the update/ESM pitch, `apt-mark hold`s `nvidia-l4t|tegra` packages, optional
+  static IPv4 via a NetworkManager profile `postflash-static` (defaults = bit-bots robot network),
+  then PASS/FAIL/WARN/MANUAL checks porting `scripts/CHECKLIST.md` §4. Never installs `nvidia-jetpack`.
 - The firmware archives are HZHY's own pre-adapted L4T BSP + rootfs builds for this exact carrier
   board, not stock NVIDIA images — don't substitute a stock NVIDIA JetPack image and expect
   board-specific peripherals (fan header, CAN, GPIO mapping) to work.

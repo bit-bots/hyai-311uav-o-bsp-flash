@@ -118,5 +118,5 @@ echo " It should boot straight from NVMe into JetPack 6.2."
 echo " If it doesn't: ESC at boot -> Boot Maintenance Manager -> Boot"
 echo " Options -> Change Boot Order -> move NVMe entry to top -> F10, Y."
 echo
-echo " Then run the post-flash smoke tests from CHECKLIST.md."
+echo " Then copy scripts/postflash.sh to the board and run it there (README.md)."
 echo "=================================================================="

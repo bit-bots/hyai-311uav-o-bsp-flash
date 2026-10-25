@@ -50,13 +50,30 @@ Afterwards, power-cycle the board. It boots from NVMe into JetPack 6.2. If it do
 **ESC** at boot → Boot Maintenance Manager → Boot Options → Change Boot Order → move NVMe to the
 top → **F10**, **Y**.
 
-Then run through the post-flash checks in [`scripts/CHECKLIST.md`](scripts/CHECKLIST.md) §3–4.
+Then run `postflash.sh` **on the Jetson**. It disables automatic upgrades, `apt-mark hold`s the
+L4T/tegra packages, optionally sets a static IPv4, and runs the post-flash checks
+(`PASS`/`FAIL`/`WARN`/`MANUAL`, exit 1 only on `FAIL`). Idempotent, safe to re-run. Use the USB
+link (`192.168.55.1`) so changing the ethernet config can't cut your session:
+
+```bash
+scp scripts/postflash.sh nvidia@192.168.55.1:
+ssh -t nvidia@192.168.55.1 sudo ./postflash.sh --ip 172.20.1.13    # bit-bots robot 3
+```
+
+`--ip ADDR[/PREFIX]` (prefix defaults to `/22`), `--gw` and `--dns` (both default `172.20.0.1`)
+follow the bit-bots robot network; pass your own values otherwise. `--iface` overrides the
+auto-detected ethernet port. Without `--ip` the network is left alone. `WARN`/`MANUAL` items are
+explained in [`scripts/CHECKLIST.md`](scripts/CHECKLIST.md) §4.
+
+Bit-Bots may refer to the robot setup in Ansible.
 
 ## ⚠️ Never `apt upgrade` the flashed board
 
 HZHY's image ships a custom kernel and board adaptation layer that an `apt upgrade` overwrites.
 This includes the unattended upgrades Ubuntu has enabled by default. `sudo apt install
-nvidia-jetpack` to add missing NVIDIA components is fine.
+nvidia-jetpack` to add missing NVIDIA components is fine. `postflash.sh` turns the automatic
+upgrades off and holds the L4T packages. If a later install complains about a held package:
+`sudo apt-mark unhold <pkg>`, install, then re-run `postflash.sh` to restore the holds.
 
 ## Troubleshooting
 
@@ -71,6 +88,7 @@ see "Validating without touching the board" at the end of that file.
 | `scripts/fetch-bsp.sh` | Downloads and verifies the firmware archive. `./fetch-bsp.sh jp5` fetches the older JetPack 5.1.4 build, which is untested and not used by `setup.sh` (TODO). |
 | `scripts/setup.sh` | Extracts the archive and builds the Docker image. |
 | `scripts/flash.sh` | Recovery-mode check and flash. |
+| `scripts/postflash.sh` | Runs on the Jetson: upgrade guards, package holds, static IPv4, post-flash checks. |
 | `scripts/Dockerfile` | Ubuntu 22.04 with NVIDIA's flash prerequisites. |
 | `scripts/CHECKLIST.md` | Step-by-step flash, post-flash checks, known problems. |
 | `CHECKSUMS.txt` | SHA-256 of the known-good firmware archives. |
